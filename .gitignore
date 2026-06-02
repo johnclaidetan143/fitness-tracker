@@ -19,3 +19,4 @@
 /storage/*.key
 /storage/pail
 Thumbs.db
+/vendor
