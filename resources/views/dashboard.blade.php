@@ -107,20 +107,27 @@
         </div>
         @forelse($todayWorkouts as $w)
         <div class="flex items-center gap-3 py-2 border-b border-slate-100 last:border-0">
-            <div class="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center">
+            <div class="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <i class="fa-solid {{ $w->type === 'running' ? 'fa-person-running' : ($w->type === 'pushups' ? 'fa-hand-fist' : ($w->type === 'plank' ? 'fa-person' : 'fa-dumbbell')) }} text-indigo-600 text-sm"></i>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-slate-700 truncate">{{ $w->name }}</p>
+                <a href="{{ route('workouts.show', $w) }}" class="text-sm font-medium text-slate-700 hover:text-indigo-600 truncate block">{{ $w->name }}</a>
                 <p class="text-xs text-slate-400">{{ $w->duration_minutes }} min · {{ $w->calories_burned }} kcal</p>
             </div>
+            <a href="{{ route('workouts.show', $w) }}" class="text-slate-300 hover:text-indigo-500 transition-colors flex-shrink-0">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </a>
         </div>
         @empty
         <div class="text-center py-8 text-slate-400">
             <i class="fa-solid fa-dumbbell text-3xl mb-2 block"></i>
             <p class="text-sm">No workouts today</p>
+            <a href="{{ route('workouts.create') }}" class="text-indigo-500 text-xs mt-1 inline-block hover:underline">Log one now</a>
         </div>
         @endforelse
+        @if($todayWorkouts->count() > 0)
+        <a href="{{ route('workouts.index') }}" class="block text-center text-xs text-indigo-500 hover:underline mt-3 pt-3 border-t border-slate-100">View all workouts →</a>
+        @endif
     </div>
 </div>
 

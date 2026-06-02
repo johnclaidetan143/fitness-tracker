@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <script>
-        tailwind.config = {
-            theme: { extend: { colors: { primary: '#6366f1', accent: '#22d3ee' } } }
-        }
-    </script>
     <style>
         .sidebar-link {
             display: flex;
@@ -28,16 +23,77 @@
         .sidebar-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .sidebar-link.active { background: rgba(255,255,255,0.2); color: #fff; font-weight: 600; }
         .sidebar-link i { width: 18px; text-align: center; flex-shrink: 0; }
+
+        /* Light mode */
         .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); padding: 24px; }
         .btn-primary { background: #6366f1; color: #fff; padding: 10px 20px; border-radius: 12px; font-weight: 500; border: none; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-block; }
         .btn-primary:hover { background: #4f46e5; }
         .btn-danger { background: #ef4444; color: #fff; padding: 8px 16px; border-radius: 12px; font-weight: 500; border: none; cursor: pointer; transition: background 0.2s; }
         .btn-danger:hover { background: #dc2626; }
-        .input { width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 16px; outline: none; color: #334155; font-size: 0.95rem; transition: box-shadow 0.2s; }
+        .input { width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 16px; outline: none; color: #334155; font-size: 0.95rem; transition: box-shadow 0.2s; background: #fff; }
         .input:focus { box-shadow: 0 0 0 3px rgba(99,102,241,0.25); border-color: #818cf8; }
+
+        /* Dark mode */
+        body.dark { background: #0f172a; color: #e2e8f0; }
+        body.dark .card { background: #1e293b; box-shadow: 0 1px 4px rgba(0,0,0,0.3); color: #e2e8f0; }
+        body.dark .input { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+        body.dark .input:focus { border-color: #818cf8; }
+        body.dark .text-slate-800 { color: #f1f5f9 !important; }
+        body.dark .text-slate-700 { color: #e2e8f0 !important; }
+        body.dark .text-slate-600 { color: #cbd5e1 !important; }
+        body.dark .text-slate-500 { color: #94a3b8 !important; }
+        body.dark .text-slate-400 { color: #64748b !important; }
+        body.dark .bg-slate-100 { background: #0f172a !important; }
+        body.dark .bg-slate-50  { background: #1e293b !important; }
+        body.dark .border-slate-100 { border-color: #334155 !important; }
+        body.dark .border-slate-200 { border-color: #334155 !important; }
+        body.dark table thead tr { border-color: #334155 !important; }
+        body.dark .hover\:bg-slate-50:hover { background: #334155 !important; }
+        body.dark .hover\:bg-slate-100:hover { background: #334155 !important; }
+
+        /* Dark mode toggle button */
+        #darkToggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: rgba(255,255,255,0.08);
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+        #darkToggle:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+        /* Toggle switch */
+        .toggle-switch {
+            width: 36px; height: 20px;
+            background: #475569;
+            border-radius: 999px;
+            position: relative;
+            margin-left: auto;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 14px; height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px; left: 3px;
+            transition: transform 0.2s;
+        }
+        .toggle-switch.on { background: #6366f1; }
+        .toggle-switch.on::after { transform: translateX(16px); }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex">
+<body class="bg-slate-100 min-h-screen flex" id="appBody">
 
     {{-- Sidebar --}}
     <aside class="w-56 min-h-screen bg-gradient-to-b from-indigo-700 to-indigo-900 flex flex-col fixed top-0 left-0 z-30" style="width:220px;height:100vh">
@@ -50,7 +106,7 @@
             </div>
         </div>
 
-        <nav class="flex-1 p-4 space-y-1" style="overflow-y:auto;max-height:calc(100vh - 180px)">
+        <nav class="flex-1 p-4 space-y-1" style="overflow-y:auto;max-height:calc(100vh - 200px)">
             <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
@@ -60,9 +116,6 @@
             </a>
             <a href="{{ route('templates.index') }}" class="sidebar-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-list-check"></i> Templates
-            </a>
-            <a href="{{ route('tutorials.index') }}" class="sidebar-link {{ request()->routeIs('tutorials.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-person-chalkboard"></i> Tutorials
             </a>
             <a href="{{ route('calendar.index') }}" class="sidebar-link {{ request()->routeIs('calendar.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-days"></i> Calendar
@@ -100,23 +153,32 @@
         </nav>
 
         <div class="p-4 border-t border-white/10">
-            <div class="flex items-center gap-3 mb-3">
+            {{-- Dark Mode Toggle --}}
+            <button id="darkToggle" onclick="toggleDark()">
+                <i class="fa-solid fa-moon" id="darkIcon"></i>
+                <span id="darkLabel">Dark Mode</span>
+                <div class="toggle-switch" id="toggleSwitch"></div>
+            </button>
+
+            {{-- User Info --}}
+            <div class="flex items-center gap-3 mb-2 mt-1">
                 @if(Auth::user()->avatar)
                     <img src="{{ Storage::url(Auth::user()->avatar) }}" class="w-9 h-9 rounded-full object-cover">
                 @else
-                    <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center text-white font-bold">
+                    <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-sm">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                 @endif
-                <div>
-                    <p class="text-white text-sm font-medium">{{ Auth::user()->name }}</p>
-                    <p class="text-indigo-300 text-xs">{{ Auth::user()->email }}</p>
+                <div class="min-w-0">
+                    <p class="text-white text-sm font-medium truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-indigo-300 text-xs truncate">{{ Auth::user()->email }}</p>
                 </div>
             </div>
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="w-full text-left sidebar-link text-sm">
-                    <i class="fa-solid fa-right-from-bracket w-5"></i> Logout
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
             </form>
         </div>
@@ -132,5 +194,27 @@
         @yield('content')
     </main>
 
+<script>
+    const body = document.getElementById('appBody');
+    const sw   = document.getElementById('toggleSwitch');
+    const icon = document.getElementById('darkIcon');
+    const label = document.getElementById('darkLabel');
+
+    // Load saved preference
+    if (localStorage.getItem('darkMode') === 'true') {
+        body.classList.add('dark');
+        sw.classList.add('on');
+        icon.className = 'fa-solid fa-sun';
+        label.textContent = 'Light Mode';
+    }
+
+    function toggleDark() {
+        const isDark = body.classList.toggle('dark');
+        sw.classList.toggle('on', isDark);
+        icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+        localStorage.setItem('darkMode', isDark);
+    }
+</script>
 </body>
 </html>

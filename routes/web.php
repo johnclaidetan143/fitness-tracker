@@ -29,14 +29,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::middleware('admin')->group(function () {
-        Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-        Route::get('/admin/workouts', [AdminController::class, 'workouts'])->name('admin.workouts');
-        Route::get('/admin/meals', [AdminController::class, 'meals'])->name('admin.meals');
-        Route::get('/admin/water-logs', [AdminController::class, 'waterLogs'])->name('admin.water-logs');
-        Route::get('/admin/achievements', [AdminController::class, 'achievements'])->name('admin.achievements');
-        Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    // Admin routes
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/workouts', [AdminController::class, 'workouts'])->name('admin.workouts');
+        Route::get('/meals', [AdminController::class, 'meals'])->name('admin.meals');
+        Route::get('/water-logs', [AdminController::class, 'waterLogs'])->name('admin.water-logs');
+        Route::get('/achievements', [AdminController::class, 'achievements'])->name('admin.achievements');
+        Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
     });
 
     Route::resource('workouts', WorkoutController::class);
@@ -63,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
-    Route::get('/sleep', [SleepController::class, 'index'])->name('sleep.index');
+Route::get('/sleep', [SleepController::class, 'index'])->name('sleep.index');
     Route::post('/sleep', [SleepController::class, 'store'])->name('sleep.store');
     Route::delete('/sleep/{sleepLog}', [SleepController::class, 'destroy'])->name('sleep.destroy');
 
