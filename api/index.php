@@ -1,9 +1,16 @@
 <?php
 
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+// Vercel workaround for autoload
+require __DIR__ . '/../vendor/autoload.php';
 
-if ($uri !== '/' && file_exists(__DIR__ . '/../public' . $uri)) {
-    return false;
-}
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
-require_once __DIR__ . '/../public/index.php';
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+);
+
+$response->send();
+
+$kernel->terminate($request, $response);
