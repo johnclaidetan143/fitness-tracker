@@ -8,6 +8,7 @@ use App\Models\WorkoutTemplate;
 use App\Services\FitnessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class WorkoutController extends Controller
 {
@@ -20,14 +21,15 @@ class WorkoutController extends Controller
     public function create()
     {
         $templates = WorkoutTemplate::where('user_id', Auth::id())->get();
-        return view('workouts.create', compact('templates'));
+        $workoutTypes = config('workout_types');
+        return view('workouts.create', compact('templates', 'workoutTypes'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'             => 'required|string|max:255',
-            'type'             => 'required|in:running,pushups,plank',
+            'type'             => ['required', Rule::in(array_keys(config('workout_types')))],
             'duration_minutes' => 'required|integer|min:1',
             'calories_burned'  => 'required|integer|min:0',
             'steps'            => 'nullable|integer|min:0',
@@ -76,7 +78,8 @@ class WorkoutController extends Controller
     {
         abort_if($workout->user_id !== Auth::id(), 403);
         $workout->load('sets');
-        return view('workouts.edit', compact('workout'));
+        $workoutTypes = config('workout_types');
+        return view('workouts.edit', compact('workout', 'workoutTypes'));
     }
 
     public function update(Request $request, Workout $workout)
@@ -84,7 +87,7 @@ class WorkoutController extends Controller
         abort_if($workout->user_id !== Auth::id(), 403);
         $data = $request->validate([
             'name'             => 'required|string|max:255',
-            'type'             => 'required|in:running,pushups,plank',
+            'type'             => ['required', Rule::in(array_keys(config('workout_types')))],
             'duration_minutes' => 'required|integer|min:1',
             'calories_burned'  => 'required|integer|min:0',
             'steps'            => 'nullable|integer|min:0',

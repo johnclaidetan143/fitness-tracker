@@ -7,6 +7,8 @@ use App\Models\BodyMeasurement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\FitnessService;
+
 class BodyController extends Controller
 {
     public function index()
@@ -44,7 +46,7 @@ class BodyController extends Controller
 
         // Update user profile weight/height
         Auth::user()->update(['weight' => $data['weight'], 'height' => $data['height']]);
-
+        FitnessService::checkAchievements(Auth::user());
         return back()->with('success', 'BMI logged!');
     }
 

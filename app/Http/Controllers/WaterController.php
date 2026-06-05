@@ -6,6 +6,8 @@ use App\Models\WaterLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\FitnessService;
+
 class WaterController extends Controller
 {
     public function index()
@@ -24,9 +26,10 @@ class WaterController extends Controller
         WaterLog::create([
             'user_id' => Auth::id(),
             'glasses' => $data['glasses'],
-            'ml' => $data['glasses'] * 250,
+            'ml'      => $data['glasses'] * 250,
             'log_date' => now()->toDateString(),
         ]);
+        FitnessService::checkAchievements(Auth::user());
         return back()->with('success', 'Water intake logged!');
     }
 

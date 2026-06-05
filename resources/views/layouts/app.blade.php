@@ -117,6 +117,9 @@
             <a href="{{ route('templates.index') }}" class="sidebar-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-list-check"></i> Templates
             </a>
+            <a href="{{ route('tutorials.index') }}" class="sidebar-link {{ request()->routeIs('tutorials.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-video"></i> Tutorials
+            </a>
             <a href="{{ route('calendar.index') }}" class="sidebar-link {{ request()->routeIs('calendar.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-days"></i> Calendar
             </a>

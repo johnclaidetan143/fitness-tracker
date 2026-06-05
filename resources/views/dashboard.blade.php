@@ -106,9 +106,12 @@
             <a href="{{ route('workouts.create') }}" class="text-indigo-600 text-sm font-medium hover:underline">+ Add</a>
         </div>
         @forelse($todayWorkouts as $w)
+        @php
+            $typeInfo = config('workout_types.' . $w->type, ['icon' => 'fa-dumbbell', 'badge' => 'bg-indigo-100 text-indigo-600']);
+        @endphp
         <div class="flex items-center gap-3 py-2 border-b border-slate-100 last:border-0">
-            <div class="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i class="fa-solid {{ $w->type === 'running' ? 'fa-person-running' : ($w->type === 'pushups' ? 'fa-hand-fist' : ($w->type === 'plank' ? 'fa-person' : 'fa-dumbbell')) }} text-indigo-600 text-sm"></i>
+            <div class="w-9 h-9 {{ $typeInfo['badge'] }} rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid {{ $typeInfo['icon'] }} text-sm"></i>
             </div>
             <div class="flex-1 min-w-0">
                 <a href="{{ route('workouts.show', $w) }}" class="text-sm font-medium text-slate-700 hover:text-indigo-600 truncate block">{{ $w->name }}</a>

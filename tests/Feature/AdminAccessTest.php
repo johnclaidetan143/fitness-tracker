@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -22,6 +23,19 @@ class AdminAccessTest extends TestCase
         ]);
 
         $response->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_seeded_normal_user_is_redirected_to_user_dashboard_after_login(): void
+    {
+        $this->seed(UserSeeder::class);
+
+        $response = $this->post('/login', [
+            'email' => 'user@example.com',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertFalse(User::where('email', 'user@example.com')->firstOrFail()->is_admin);
     }
 
     public function test_normal_user_cannot_access_admin_dashboard(): void

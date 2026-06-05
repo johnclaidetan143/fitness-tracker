@@ -6,6 +6,8 @@ use App\Models\SleepLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\FitnessService;
+
 class SleepController extends Controller
 {
     public function index()
@@ -41,7 +43,7 @@ class SleepController extends Controller
             ['user_id' => Auth::id(), 'sleep_date' => $data['sleep_date']],
             $data
         );
-
+        FitnessService::checkAchievements(Auth::user());
         return back()->with('success', 'Sleep logged!');
     }
 

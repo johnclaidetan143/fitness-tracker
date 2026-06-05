@@ -16,15 +16,12 @@
 <div class="grid gap-4">
     @foreach($workouts as $workout)
     @php
-        $icons = ['running'=>'fa-person-running','pushups'=>'fa-hand-fist','plank'=>'fa-person'];
-        $colors = ['running'=>'bg-emerald-100 text-emerald-600','pushups'=>'bg-orange-100 text-orange-600','plank'=>'bg-violet-100 text-violet-600'];
-        $icon = $icons[$workout->type] ?? 'fa-dumbbell';
-        $color = $colors[$workout->type] ?? 'bg-indigo-100 text-indigo-600';
+        $typeInfo = config('workout_types.' . $workout->type, ['label' => ucfirst($workout->type), 'icon' => 'fa-dumbbell', 'badge' => 'bg-indigo-100 text-indigo-600']);
     @endphp
     <div class="card hover:shadow-md transition-shadow">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 {{ $color }} rounded-2xl flex items-center justify-center flex-shrink-0">
-                <i class="fa-solid {{ $icon }} text-2xl"></i>
+            <div class="w-14 h-14 {{ $typeInfo['badge'] }} rounded-2xl flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid {{ $typeInfo['icon'] }} text-2xl"></i>
             </div>
             <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
@@ -33,7 +30,7 @@
                             {{ $workout->name }}
                         </a>
                         <div class="flex items-center gap-2 mt-0.5">
-                            <span class="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">{{ ucfirst($workout->type) }}</span>
+                            <span class="text-xs font-medium px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">{{ $typeInfo['label'] }}</span>
                             <span class="text-xs text-slate-400">{{ $workout->workout_date->format('M d, Y') }}</span>
                         </div>
                     </div>

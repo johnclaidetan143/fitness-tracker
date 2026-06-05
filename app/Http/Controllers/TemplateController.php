@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\WorkoutTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class TemplateController extends Controller
 {
     public function index()
     {
         $templates = WorkoutTemplate::where('user_id', Auth::id())->orderByDesc('created_at')->get();
-        return view('templates.index', compact('templates'));
+        $workoutTypes = config('workout_types');
+        return view('templates.index', compact('templates', 'workoutTypes'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'               => 'required|string|max:255',
-            'type'               => 'required|in:running,pushups,plank',
+            'type'               => ['required', Rule::in(array_keys(config('workout_types')))],
             'estimated_minutes'  => 'required|integer|min:1',
             'exercises'          => 'required|array|min:1',
             'exercises.*.name'   => 'required|string',

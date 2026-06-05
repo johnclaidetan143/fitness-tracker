@@ -42,15 +42,15 @@
             {{-- Workout Type --}}
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-3">Workout Type</label>
-                <div class="grid grid-cols-3 gap-3">
-                    @foreach(['running'=>['fa-person-running','Running','emerald'],'pushups'=>['fa-hand-fist','Push-ups','orange'],'plank'=>['fa-person','Plank','violet']] as $type => $info)
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    @foreach($workoutTypes as $type => $info)
                     <label class="cursor-pointer">
                         <input type="radio" name="type" value="{{ $type }}" class="sr-only" {{ old('type','running') === $type ? 'checked' : '' }}>
                         <div class="type-card border-2 rounded-2xl p-3 text-center transition-all {{ old('type','running') === $type ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:border-slate-300' }}">
-                            <div class="w-10 h-10 rounded-xl bg-{{ $info[2] }}-100 flex items-center justify-center mx-auto mb-2">
-                                <i class="fa-solid {{ $info[0] }} text-{{ $info[2] }}-600 text-lg"></i>
+                            <div class="w-10 h-10 rounded-xl bg-{{ $info['color'] }}-100 flex items-center justify-center mx-auto mb-2">
+                                <i class="fa-solid {{ $info['icon'] }} text-{{ $info['color'] }}-600 text-lg"></i>
                             </div>
-                            <span class="text-xs font-semibold text-slate-600">{{ $info[1] }}</span>
+                            <span class="text-xs font-semibold text-slate-600 leading-tight block">{{ $info['label'] }}</span>
                         </div>
                     </label>
                     @endforeach

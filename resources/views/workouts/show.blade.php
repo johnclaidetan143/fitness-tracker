@@ -3,10 +3,7 @@
 @section('content')
 
 @php
-    $icons = ['running'=>'fa-person-running','pushups'=>'fa-hand-fist','plank'=>'fa-person'];
-    $colors = ['running'=>'bg-emerald-100 text-emerald-600','pushups'=>'bg-orange-100 text-orange-600','plank'=>'bg-violet-100 text-violet-600'];
-    $icon = $icons[$workout->type] ?? 'fa-dumbbell';
-    $color = $colors[$workout->type] ?? 'bg-indigo-100 text-indigo-600';
+    $typeInfo = config('workout_types.' . $workout->type, ['label' => ucfirst($workout->type), 'icon' => 'fa-dumbbell', 'badge' => 'bg-indigo-100 text-indigo-600']);
 @endphp
 
 <div class="max-w-2xl">
@@ -19,8 +16,8 @@
             <h1 class="text-2xl font-bold text-slate-800">{{ $workout->name }}</h1>
             <p class="text-slate-500 text-sm">{{ $workout->workout_date->format('l, F j, Y') }}</p>
         </div>
-        <div class="w-14 h-14 {{ $color }} rounded-2xl flex items-center justify-center">
-            <i class="fa-solid {{ $icon }} text-2xl"></i>
+        <div class="w-14 h-14 {{ $typeInfo['badge'] }} rounded-2xl flex items-center justify-center">
+            <i class="fa-solid {{ $typeInfo['icon'] }} text-2xl"></i>
         </div>
     </div>
 
@@ -48,10 +45,10 @@
             <p class="text-xs text-slate-400 font-medium mt-0.5">Steps</p>
         </div>
         <div class="card text-center py-5">
-            <div class="w-10 h-10 {{ $color }} rounded-xl flex items-center justify-center mx-auto mb-2">
-                <i class="fa-solid {{ $icon }}"></i>
+            <div class="w-10 h-10 {{ $typeInfo['badge'] }} rounded-xl flex items-center justify-center mx-auto mb-2">
+                <i class="fa-solid {{ $typeInfo['icon'] }}"></i>
             </div>
-            <p class="text-2xl font-extrabold text-slate-800">{{ ucfirst($workout->type) }}</p>
+            <p class="text-2xl font-extrabold text-slate-800">{{ $typeInfo['label'] }}</p>
             <p class="text-xs text-slate-400 font-medium mt-0.5">Type</p>
         </div>
     </div>

@@ -22,9 +22,9 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-1">Type</label>
                     <select name="type" class="input">
-                        <option value="running">Running</option>
-                        <option value="pushups">Push-ups</option>
-                        <option value="plank">Plank</option>
+                        @foreach($workoutTypes as $type => $info)
+                        <option value="{{ $type }}">{{ $info['label'] }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>
@@ -53,7 +53,7 @@
             <div class="flex items-start justify-between mb-3">
                 <div>
                     <h3 class="font-bold text-slate-800">{{ $t->name }}</h3>
-                    <p class="text-sm text-slate-500">{{ ucfirst($t->type) }} · {{ $t->estimated_minutes }} min</p>
+                    <p class="text-sm text-slate-500">{{ $workoutTypes[$t->type]['label'] ?? ucfirst($t->type) }} · {{ $t->estimated_minutes }} min</p>
                 </div>
                 <div class="flex gap-2">
                     <a href="{{ route('workouts.create', ['template' => $t->id]) }}"

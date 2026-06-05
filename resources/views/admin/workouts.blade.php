@@ -27,7 +27,7 @@
                     <tr>
                         <td class="font-bold text-slate-800">{{ $workout->user?->name ?? 'Deleted user' }}</td>
                         <td>{{ $workout->name }}</td>
-                        <td>{{ $workout->type ?? '-' }}</td>
+                        <td>{{ config('workout_types.' . $workout->type . '.label', $workout->type ?? '-') }}</td>
                         <td>{{ $workout->duration_minutes ?? 0 }}</td>
                         <td>{{ $workout->calories_burned ?? 0 }}</td>
                         <td>{{ $workout->steps ?? 0 }}</td>

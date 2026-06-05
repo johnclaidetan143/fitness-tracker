@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
             ['email' => env('ADMIN_EMAIL', 'admin@example.com')],
             [
                 'name' => env('ADMIN_NAME', 'Super Admin'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'password123')),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
                 'is_admin' => true,
             ]
         );
